@@ -40,6 +40,47 @@ db = SQLAlchemy()
 pagedown = PageDown()
 
 login_manager = LoginManager()
+# 是指未登录时，访问需要登录的页面，会跳转过去的登录页面。
+# 这个值是登录页面视图函数的
 login_manager.login_view = 'auth.login'
+
+
+def create_app(config_name):
+    '''
+    configname 即config.py中的config字典中对应的模式的key：
+    development,testing,production,heroku,docker,unix,default
+    生成app并将flask的插件配置与app绑定
+    '''
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])  # 获取config中key对应的类
+    config[config_name].init_app(app) # 调用各个*Config类中的init_app(app)方法
+
+    # 各个flask拓展插件实例配置
+    bootstrap.init_app(app)
+    mail.init_app(app)
+    moment.init_app(app)
+    db.init_app(app)
+    login_manager.init_app(app)
+    pagedown.init_app(app)
+
+    # flask_sslify配置您的Flask应用程序，将所有传入的请求重定向到https。
+    # 重定向只发生在app.debug为False时。
+    if app.config['SSL_REDIRECT']:
+        from flask_sslify import SSLify
+        sslify = SSLify(app)
+
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix ='/auth')
+
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix ='/api/v1')
+
+    return app
+
+
+
 
 
