@@ -118,11 +118,19 @@ class Role(db.Model):
         return '<Role %r>'% self.name
 
 
-
+class Follow(db.Model):
+    '''
+    记录用户之间从属关系的表
+    '''
+    __tablename__ = 'follows'
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+    followed_id = db.Columnn(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+    timestamp = db.Column(db.DateTime, default = datetime.utcnow)
 
 
 
 if __name__=='__main__':
+    pass
     # class T():
     #     def __init__(self):
     #         if self.p is None:
