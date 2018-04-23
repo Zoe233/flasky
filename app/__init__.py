@@ -1,3 +1,10 @@
+import sys
+import os
+
+current_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_PATH = os.path.join(current_path, '..')
+sys.path.append(ROOT_PATH)
+
 from flask import Flask
 # 是Twitter开发的一个开源框架，
 # 它提供的用户界面组件可用于创建整洁且具有吸引力的网页，
@@ -69,14 +76,14 @@ def create_app(config_name):
         from flask_sslify import SSLify
         sslify = SSLify(app)
 
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
-
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix ='/auth')
-
-    from .api import api as api_blueprint
-    app.register_blueprint(api_blueprint, url_prefix ='/api/v1')
+    # from .main import main as main_blueprint
+    # app.register_blueprint(main_blueprint)
+    #
+    # from .auth import auth as auth_blueprint
+    # app.register_blueprint(auth_blueprint, url_prefix ='/auth')
+    #
+    # from .api import api as api_blueprint
+    # app.register_blueprint(api_blueprint, url_prefix ='/api/v1')
 
     return app
 
